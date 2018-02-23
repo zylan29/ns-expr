@@ -1,0 +1,81 @@
+diff -rupN ns-allinone-2.35-orig/nam-1.15/Makefile.in ns-allinone-2.35/nam-1.15/Makefile.in
+--- ns-allinone-2.35-orig/nam-1.15/Makefile.in	2011-11-05 01:18:41.000000000 +0800
++++ ns-allinone-2.35/nam-1.15/Makefile.in	2018-02-23 14:40:44.335097197 +0800
+@@ -45,7 +45,7 @@ datarootdir = @datarootdir@
+ 
+ CC = @CC@
+ CPP = @CXX@
+-CCOPT = @V_CCOPT@
++CCOPT = @V_CCOPT@ -funsigned-char
+ MKDEP = ./conf/mkdep
+ # Have to be the same as that defined in conf/makefile.win
+ TCL2C = @V_TCL2CPP@
+diff -rupN ns-allinone-2.35-orig/nam-1.15/makefile.vc ns-allinone-2.35/nam-1.15/makefile.vc
+--- ns-allinone-2.35-orig/nam-1.15/makefile.vc	2002-04-16 05:58:28.000000000 +0800
++++ ns-allinone-2.35/nam-1.15/makefile.vc	2018-02-23 14:40:33.763254509 +0800
+@@ -43,7 +43,7 @@ MANDEST = @mandir@
+ 
+ CC = @CC@
+ CPP = @CXX@
+-CCOPT = @V_CCOPT@
++CCOPT = @V_CCOPT@ -funsigned-char
+ MKDEP = ./conf/mkdep
+ # Have to be the same as that defined in conf/makefile.win
+ TCL2C = @V_TCL2CPP@
+diff -rupN ns-allinone-2.35-orig/ns-2.35/linkstate/ls.h ns-allinone-2.35/ns-2.35/linkstate/ls.h
+--- ns-allinone-2.35-orig/ns-2.35/linkstate/ls.h	2010-03-08 13:54:51.000000000 +0800
++++ ns-allinone-2.35/ns-2.35/linkstate/ls.h	2018-02-23 12:48:58.613528097 +0800
+@@ -134,7 +134,7 @@ public:
+ 		return ib.second ? ib.first : baseMap::end();
+ 	}
+ 
+-	void eraseAll() { erase(baseMap::begin(), baseMap::end()); }
++	void eraseAll() { this->erase(baseMap::begin(), baseMap::end()); }
+ 	T* findPtr(Key key) {
+ 		iterator it = baseMap::find(key);
+ 		return (it == baseMap::end()) ? (T *)NULL : &((*it).second);
+diff -rupN ns-allinone-2.35-orig/ns-2.35/Makefile.in ns-allinone-2.35/ns-2.35/Makefile.in
+--- ns-allinone-2.35-orig/ns-2.35/Makefile.in	2011-10-24 00:29:54.000000000 +0800
++++ ns-allinone-2.35/ns-2.35/Makefile.in	2018-02-23 14:40:00.823857387 +0800
+@@ -53,7 +53,7 @@ PERL	= @PERL@
+ # for diffusion
+ #DIFF_INCLUDES = "./diffusion3/main ./diffusion3/lib ./diffusion3/nr ./diffusion3/ns"
+ 
+-CCOPT	= @V_CCOPT@ 
++CCOPT	= @V_CCOPT@ -funsigned-char
+ STATIC	= @V_STATIC@
+ #LDFLAGS	= $(STATIC)
+ LDFLAGS	= @LDFLAGS@ 
+diff -rupN ns-allinone-2.35-orig/ns-2.35/makefile.vc ns-allinone-2.35/ns-2.35/makefile.vc
+--- ns-allinone-2.35-orig/ns-2.35/makefile.vc	2010-05-10 06:28:41.000000000 +0800
++++ ns-allinone-2.35/ns-2.35/makefile.vc	2018-02-23 14:40:18.364670289 +0800
+@@ -53,7 +53,7 @@ PERL	= @PERL@
+ # for diffusion
+ #DIFF_INCLUDES = "./diffusion3/main ./diffusion3/lib ./diffusion3/nr ./diffusion3/ns"
+ 
+-CCOPT	= @V_CCOPT@ 
++CCOPT	= @V_CCOPT@ -funsigned-char
+ STATIC	= @V_STATIC@
+ #LDFLAGS	= $(STATIC)
+ LDFLAGS	= @LDFLAGS@ 
+diff -rupN ns-allinone-2.35-orig/ns-2.35/mdart/mdart_adp.cc ns-allinone-2.35/ns-2.35/mdart/mdart_adp.cc
+--- ns-allinone-2.35-orig/ns-2.35/mdart/mdart_adp.cc	2010-05-10 06:28:41.000000000 +0800
++++ ns-allinone-2.35/ns-2.35/mdart/mdart_adp.cc	2018-02-23 12:45:26.800160252 +0800
+@@ -105,7 +105,7 @@ void ADP::sendDarq(nsaddr_t reqId, int r
+ #ifdef DEBUG_ADP
+ 	fprintf(stdout, "%.9f\tADP::sendDarq(%d)\t\t\tin node %d\twith address %s\n", CURRENT_TIME, reqId, mdart_->id_, bitString(mdart_->address_));
+ #endif
+-	nsaddr_t dstAdd_ = hash(reqId);
++	nsaddr_t dstAdd_ = ::hash(reqId);
+ #ifdef DEBUG_ADP
+ 	fprintf(stdout, "\tsending darq for node %s\n", bitString(dstAdd_));
+ #endif
+@@ -393,7 +393,7 @@ void ADP::sendDaup() {
+ 	fprintf(stdout, "%.9f\tMDART::sendDaup()\t\t\t\tin node %d\twith address %s\n", CURRENT_TIME, mdart_->id_, bitString(mdart_->address_));
+ //	printDHT();
+ #endif
+-	nsaddr_t dstAdd_ = hash(mdart_->id_);
++	nsaddr_t dstAdd_ = ::hash(mdart_->id_);
+ #ifdef DEBUG_ADP
+ 	fprintf(stdout, "\tsending daup for node  %s\n", bitString(dstAdd_));
+ 	mdart_->routingTable_->print();
